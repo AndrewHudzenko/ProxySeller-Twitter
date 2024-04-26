@@ -1,0 +1,47 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-patients
+      author: Andrew Hudzenko
+      changes:
+        - insert:
+            tableName: patients
+            columns:
+              - column: {name: name, value: "Bob"}
+              - column: {name: birth_date, valueDate: "2001-01-11"}
+              - column: {name: last_temperature, valueNumeric: 36.6}
+              - column: {name: last_pulse, valueNumeric: 75}
+        - insert:
+            tableName: patients
+            columns:
+              - column: {name: name, value: "Alice"}
+              - column: {name: birth_date, valueDate: "2002-02-12"}
+              - column: {name: last_temperature, valueNumeric: 37.2}
+              - column: {name: last_pulse, valueNumeric: 112}
+        - insert:
+            tableName: patients
+            columns:
+              - column: {name: name, value: "John"}
+              - column: { name: birth_date, valueDate: "2003-03-13" }
+              - column: { name: last_temperature, valueNumeric: 38.1 }
+              - column: { name: last_pulse, valueNumeric: 135 }
+        - insert:
+            tableName: patients
+            columns:
+              - column: {name: name, value: "Andrew"}
+              - column: { name: birth_date, valueDate: "2004-04-14" }
+              - column: { name: last_temperature, valueNumeric: 36.9 }
+              - column: { name: last_pulse, valueNumeric: 99 }
+        - insert:
+            tableName: patients
+            columns:
+              - column: {name: name, value: "Martin"}
+              - column: { name: birth_date, valueDate: "2005-05-15" }
+              - column: { name: last_temperature, valueNumeric: 39.5 }
+              - column: { name: last_pulse, valueNumeric: 123 }
+        - insert:
+            tableName: patients
+            columns:
+              - column: {name: name, value: "Michael"}
+              - column: { name: birth_date, valueDate: "2006-06-16" }
+              - column: { name: last_temperature, valueNumeric: 37.9 }
+              - column: { name: last_pulse, valueNumeric: 130 }

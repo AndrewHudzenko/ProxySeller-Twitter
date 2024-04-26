@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-patients-table
+      author: Andrew Hudzenko
+      changes:
+        - createTable:
+            tableName: patients
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: birth_date
+                  type: date
+              - column:
+                  name: last_temperature
+                  type: double
+              - column:
+                  name: last_pulse
+                  type: int
+              - column:
+                  name: is_deleted
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
