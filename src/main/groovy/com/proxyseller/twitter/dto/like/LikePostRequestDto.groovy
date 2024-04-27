@@ -1,12 +1,12 @@
 package com.proxyseller.twitter.dto.like
 
-class LikeCreateRequestDto {
+class LikePostRequestDto {
     private String postId
 
-    LikeCreateRequestDto() {
+    LikePostRequestDto() {
     }
 
-    LikeCreateRequestDto(String postId) {
+    LikePostRequestDto(String postId) {
         this.postId = postId
     }
 
