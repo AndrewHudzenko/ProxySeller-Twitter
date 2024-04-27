@@ -118,4 +118,11 @@ class PostServiceImpl implements PostService {
                 .map(postMapper::toDto)
                 .collect(Collectors.toList())
     }
+
+    @Override
+    Post getPostModelById(String id) {
+        log.info("PostServiceImpl: Getting post model by id: ${id}")
+        return postRepository.findByIdAndIsDeletedFalse(id)
+                .orElseThrow(() -> new RuntimeException("Post not found!"))
+    }
 }

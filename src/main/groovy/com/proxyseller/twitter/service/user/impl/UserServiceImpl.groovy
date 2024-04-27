@@ -124,7 +124,7 @@ class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
+//    @Transactional
     void followUser(String id) {
         String currentUserId = SecurityUtil.getCurrentUserId()
         User currentUser = userRepository.findByIdAndIsDeletedFalse(currentUserId)
@@ -152,7 +152,7 @@ class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
+//    @Transactional
     void unfollowUser(String string) {
         String currentUserId = SecurityUtil.getCurrentUserId()
         User currentUser = userRepository.findByIdAndIsDeletedFalse(currentUserId)

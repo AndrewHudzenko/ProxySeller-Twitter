@@ -1,6 +1,5 @@
 package com.proxyseller.twitter.model.post
 
-
 import com.proxyseller.twitter.model.comment.Comment
 import com.proxyseller.twitter.model.like.Like
 import org.springframework.data.annotation.Id

@@ -2,6 +2,7 @@ package com.proxyseller.twitter.service.comment
 
 import com.proxyseller.twitter.dto.comment.CommentCreateRequestDto
 import com.proxyseller.twitter.dto.comment.CommentDto
+import com.proxyseller.twitter.dto.comment.CommentUpdateRequestDto
 
 interface CommentService {
     /**
@@ -33,4 +34,17 @@ interface CommentService {
     CommentDto getCommentById(String id)
 
 
+    /**
+     * Method to delete a comment by id
+     * @param id
+     */
+    void deleteComment(String id)
+
+    /**
+     * Method to update a comment by id
+     * @param id
+     * @param commentUpdateRequestDto
+     * @return CommentDto
+     */
+    CommentDto updateComment(String id, CommentUpdateRequestDto commentUpdateRequestDto)
 }

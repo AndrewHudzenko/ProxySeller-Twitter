@@ -4,6 +4,6 @@ import com.proxyseller.twitter.model.like.Like
 import org.springframework.data.mongodb.repository.MongoRepository
 
 interface LikeRepository extends MongoRepository<Like, UUID> {
-    List<Like> findByPostId(String postId)
-    List<Like> findByUserId(String userId)
+    List<Like> findAllByPostIdAndUserId(String postId, String userId)
+    List<Like> findByPostId(String id)
 }

@@ -67,4 +67,10 @@ interface PostService {
      * @return List<PostDto>
      */
     List<PostDto> getAllPostsByFollowingUsers()
+
+    /**
+     * Method to get post model by id
+     * @param id
+     */
+    Post getPostModelById(String id)
 }

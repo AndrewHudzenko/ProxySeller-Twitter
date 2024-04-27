@@ -65,4 +65,29 @@ class Like {
     void setIsDeleted(boolean isDeleted) {
         this.isDeleted = isDeleted
     }
+
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (o == null || getClass() != o.class) return false
+
+        Like like = (Like) o
+
+        if (isDeleted != like.isDeleted) return false
+        if (createdAt != like.createdAt) return false
+        if (id != like.id) return false
+        if (postId != like.postId) return false
+        if (userId != like.userId) return false
+
+        return true
+    }
+
+    int hashCode() {
+        int result
+        result = (id != null ? id.hashCode() : 0)
+        result = 31 * result + (userId != null ? userId.hashCode() : 0)
+        result = 31 * result + (postId != null ? postId.hashCode() : 0)
+        result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0)
+        result = 31 * result + (isDeleted ? 1 : 0)
+        return result
+    }
 }
