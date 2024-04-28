@@ -11,10 +11,8 @@ interface UserRepository extends MongoRepository<User, String> {
 
     Optional<User> findByUsernameAndIsDeletedFalse(String username)
 
-    // method to find all users with id_deleted = false
     List<User> findAllByIsDeletedFalse()
 
-    // method to find all users by list of ids with id_deleted = false
     List<User> findAllByIdInAndIsDeletedFalse(Set<String> ids)
 
 
