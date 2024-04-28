@@ -1,7 +1,6 @@
 package com.proxyseller.twitter.service.user
 
 import com.proxyseller.twitter.dto.user.UserDto
-import com.proxyseller.twitter.dto.user.UserRegistrationRequestDto
 import com.proxyseller.twitter.dto.user.UserUpdateRequestDto
 import com.proxyseller.twitter.exception.EntityNotFoundException
 import com.proxyseller.twitter.mapper.user.UserMapper
@@ -9,6 +8,8 @@ import com.proxyseller.twitter.model.user.User
 import com.proxyseller.twitter.repository.user.UserRepository
 import com.proxyseller.twitter.security.SecurityUtil
 import com.proxyseller.twitter.service.user.impl.UserServiceImpl
+import com.proxyseller.twitter.service.util.DtoGeneratorUtil
+import com.proxyseller.twitter.service.util.ModelGeneratorUtil
 import org.springframework.security.crypto.password.PasswordEncoder
 import spock.lang.Specification
 
@@ -22,27 +23,9 @@ class UserServiceSpecification extends Specification {
 
     def "register user with new email"() {
         given:
-        def userRegistrationRequestDto = new UserRegistrationRequestDto(
-                firstName: "Max",
-                lastName: "Doe",
-                username: "johndoe",
-                password: "1234",
-                email: "johndoe@gmail.com",
-                age: 25
-        )
-        def userDto = new UserDto(
-                username: "johndoe",
-                email: "johndoe@gmail.com"
-        )
-        def user = new User(
-                firstName: "Max",
-                lastName: "Doe",
-                username: "johndoe",
-                password: "encodedPassword",
-                email: "johndoe@gmail.com",
-                age: 25,
-                isDeleted: false
-        )
+        def userRegistrationRequestDto = DtoGeneratorUtil.generateUserRegistrationRequestDto()
+        def userDto = DtoGeneratorUtil.generateUserDto()
+        def user = ModelGeneratorUtil.generateUser()
 
         userRepository.findByEmailAndIsDeletedFalse(_) >> Optional.empty()
         passwordEncoder.encode(_) >> "encodedPassword"
@@ -63,23 +46,8 @@ class UserServiceSpecification extends Specification {
 
     def "register user with existing email should throw exception"() {
         given:
-        def userRegistrationRequestDto = new UserRegistrationRequestDto(
-                firstName: "Max",
-                lastName: "Doe",
-                username: "johndoe",
-                password: "1234",
-                email: "johndoe@gmail.com",
-                age: 25
-        )
-        def user = new User(
-                firstName: "Max",
-                lastName: "Doe",
-                username: "johndoe",
-                password: "encodedPassword",
-                email: "johndoe@gmail.com",
-                age: 25,
-                isDeleted: false
-        )
+        def userRegistrationRequestDto = DtoGeneratorUtil.generateUserRegistrationRequestDto()
+        def user = ModelGeneratorUtil.generateUser()
 
         userRepository.findByEmailAndIsDeletedFalse(_ as String) >> Optional.of(user)
 
@@ -93,21 +61,8 @@ class UserServiceSpecification extends Specification {
 
     def "get user by id"() {
         given:
-        def user = new User(
-                id: "1",
-                firstName: "Max",
-                lastName: "Doe",
-                username: "johndoe",
-                password: "encodedPassword",
-                email: "johndoe@gmail.com",
-                age: 25,
-                isDeleted: false
-        )
-        def userDto = new UserDto(
-                id: "1",
-                username: "johndoe",
-                email: "johndoe@gmail.com"
-        )
+        def user = ModelGeneratorUtil.generateUser()
+        def userDto = DtoGeneratorUtil.generateUserDto()
 
         userRepository.findByIdAndIsDeletedFalse(_) >> Optional.of(user)
         userMapper.toDto(_) >> userDto
@@ -137,20 +92,8 @@ class UserServiceSpecification extends Specification {
 
     def "get user by username"() {
         given:
-        def user = new User(
-                id: "1",
-                firstName: "Max",
-                lastName: "Doe",
-                username: "johndoe",
-                password: "encodedPassword",
-                email: "johndoe@gmail.com",
-                age: 25
-        )
-        def userDto = new UserDto(
-                id: "1",
-                username: "johndoe",
-                email: "johndoe@gmail.com"
-        )
+        def user = ModelGeneratorUtil.generateUser()
+        def userDto = DtoGeneratorUtil.generateUserDto()
 
         userRepository.findByUsernameAndIsDeletedFalse(_) >> Optional.of(user)
         userMapper.toDto(_) >> userDto
@@ -180,66 +123,27 @@ class UserServiceSpecification extends Specification {
 
     def "get all users"() {
         given:
-        def user1 = new User(
-                id: "1",
-                firstName: "Max",
-                lastName: "Doe",
-                username: "johndoe",
-                password: "encodedPassword",
-                email: "johndoe1@gmail.com",
-                age: 25
-        )
-        def user2 = new User(
-                id: "2",
-                firstName: "Jane",
-                lastName: "Doe",
-                username: "janedoe",
-                password: "encodedPassword",
-                email: "johndoe2@gmail.com",
-                age: 25
-        )
-        def userDto1 = new UserDto(
-                id: "1",
-                username: "johndoe",
-                email: "johndoe1@gmail.com"
-        )
+        def user = ModelGeneratorUtil.generateUser()
+        def userDto = DtoGeneratorUtil.generateUserDto()
 
-        def userDto2 = new UserDto(
-                id: "2",
-                username: "janedoe",
-                email: "johndoe2@gmail.com"
-        )
-
-        userRepository.findAllByIsDeletedFalse() >> [user1, user2]
-        userMapper.toDto(user1) >> userDto1
-        userMapper.toDto(user2) >> userDto2
+        userRepository.findAllByIsDeletedFalse() >> [user]
+        userMapper.toDto(user) >> userDto
 
         when:
         def actual = userService.getAllUsers()
 
         then:
-        actual.size() == 2
+        actual.size() == 1
         actual[0].id == "1"
         actual[0].username == "johndoe"
-        actual[0].email == "johndoe1@gmail.com"
-        actual[1].id == "2"
-        actual[1].username == "janedoe"
-        actual[1].email == "johndoe2@gmail.com"
-        1 * userRepository.findAllByIsDeletedFalse() >> [user1, user2]
-        1 * userMapper.toDto(user1) >> userDto1
-        1 * userMapper.toDto(user2) >> userDto2
+        actual[0].email == "johndoe@gmail.com"
+        1 * userRepository.findAllByIsDeletedFalse() >> [user]
+        1 * userMapper.toDto(user) >> userDto
     }
 
     def "update user"() {
         given:
-        def userUpdateRequestDto = new UserUpdateRequestDto(
-                firstName: "Max",
-                lastName: "Doe",
-                username: "johndoe",
-                email: "johndoe@gmail.com",
-                password: "1234",
-                age: 25
-        )
+        def userUpdateRequestDto = DtoGeneratorUtil.generateUserUpdateRequestDto()
         def user = new User(
                 id: "1",
                 firstName: "David",
@@ -257,11 +161,7 @@ class UserServiceSpecification extends Specification {
                 email: "johndoe@gmail.com",
                 age: 25
         )
-        def userDto = new UserDto(
-                id: "1",
-                username: "johndoe",
-                email: "johndoe@gmail.com"
-        )
+        def userDto = DtoGeneratorUtil.generateUserDto()
 
         userRepository.findByIdAndIsDeletedFalse(_) >> Optional.of(user)
         userMapper.toModel(_) >> updatedUser
@@ -295,14 +195,7 @@ class UserServiceSpecification extends Specification {
 
     def "delete user by id"() {
         given:
-        def user = new User(
-                id: "1",
-                firstName: "Max",
-                lastName: "Doe",
-                username: "johndoe",
-                password: "encodedPassword",
-                email: "johndoe@gmail.com"
-        )
+        def user = ModelGeneratorUtil.generateUser()
 
         userRepository.findByIdAndIsDeletedFalse(_) >> Optional.of(user)
 
@@ -329,17 +222,7 @@ class UserServiceSpecification extends Specification {
     def "get followers"() {
         given:
         GroovySpy(SecurityUtil, global: true)
-        def user = new User(
-                id: "1",
-                firstName: "Max",
-                lastName: "Doe",
-                username: "johndoe",
-                password: "encodedPassword",
-                email: "johndoe@gmail.com",
-                age: 25,
-                followers: ["2", "3"],
-                following: ["4", "5"]
-        )
+        def user = ModelGeneratorUtil.generateUser()
         def userDto2 = new UserDto(
                 id: "2",
                 username: "johndoe",
@@ -353,7 +236,6 @@ class UserServiceSpecification extends Specification {
 
         SecurityUtil.getCurrentUserId() >> "1"
         userRepository.findByIdAndIsDeletedFalse(_) >> Optional.of(user)
-//        user.getFollowers() >> ["2", "3"]
         userRepository.findAllByIdInAndIsDeletedFalse(_) >> [new User(id: "2"), new User(id: "3")]
         userMapper.toDto(_) >> userDto2
         userMapper.toDto(_) >> userDto3
@@ -388,17 +270,7 @@ class UserServiceSpecification extends Specification {
     def "get following"() {
         given:
         GroovySpy(SecurityUtil, global: true)
-        def user = new User(
-                id: "1",
-                firstName: "Max",
-                lastName: "Doe",
-                username: "johndoe",
-                password: "encodedPassword",
-                email: "johndoe@gmail.com",
-                age: 25,
-                followers: ["2", "3"],
-                following: ["4", "5"]
-        )
+        def user = ModelGeneratorUtil.generateUser()
         def userDto4 = new UserDto(
                 id: "4",
                 username: "johndoe",
@@ -412,7 +284,6 @@ class UserServiceSpecification extends Specification {
 
         SecurityUtil.getCurrentUserId() >> "1"
         userRepository.findByIdAndIsDeletedFalse(_) >> Optional.of(user)
-//        user.getFollowing() >> ["4", "5"]
 
         userRepository.findAllByIdInAndIsDeletedFalse(_) >> [new User(id: "4"), new User(id: "5")]
         userMapper.toDto(_) >> userDto4
@@ -505,15 +376,7 @@ class UserServiceSpecification extends Specification {
         GroovySpy(SecurityUtil, global: true)
         SecurityUtil.getCurrentUserId() >> "1"
 
-        def currentUser = new User(
-                id: "1",
-                firstName: "John",
-                lastName: "Doe",
-                username: "johndoe",
-                password: "encodedPassword",
-                email: "johndoe@gmail.com",
-                age: 25
-        )
+        def currentUser = ModelGeneratorUtil.generateUser()
 
         userRepository.findByIdAndIsDeletedFalse("1") >> Optional.of(currentUser)
         userRepository.findByIdAndIsDeletedFalse("2") >> Optional.empty()
@@ -530,15 +393,7 @@ class UserServiceSpecification extends Specification {
         GroovySpy(SecurityUtil, global: true)
         SecurityUtil.getCurrentUserId() >> "1"
 
-        def currentUser = new User(
-                id: "1",
-                firstName: "John",
-                lastName: "Doe",
-                username: "johndoe",
-                password: "encodedPassword",
-                email: "johndoe@gmail.com",
-                age: 25
-        )
+        def currentUser = ModelGeneratorUtil.generateUser()
 
         userRepository.findByIdAndIsDeletedFalse("1") >> Optional.of(currentUser)
 
@@ -609,15 +464,7 @@ class UserServiceSpecification extends Specification {
         GroovySpy(SecurityUtil, global: true)
         SecurityUtil.getCurrentUserId() >> "1"
 
-        def currentUser = new User(
-                id: "1",
-                firstName: "John",
-                lastName: "Doe",
-                username: "johndoe",
-                password: "encodedPassword",
-                email: "johndoe@gmail.com",
-                age: 25
-        )
+        def currentUser = ModelGeneratorUtil.generateUser()
 
         userRepository.findByIdAndIsDeletedFalse("1") >> Optional.of(currentUser)
         userRepository.findByIdAndIsDeletedFalse("2") >> Optional.empty()
@@ -634,15 +481,7 @@ class UserServiceSpecification extends Specification {
         GroovySpy(SecurityUtil, global: true)
         SecurityUtil.getCurrentUserId() >> "1"
 
-        def currentUser = new User(
-                id: "1",
-                firstName: "John",
-                lastName: "Doe",
-                username: "johndoe",
-                password: "encodedPassword",
-                email: "johndoe@gmail.com",
-                age: 25
-        )
+        def currentUser = ModelGeneratorUtil.generateUser()
 
         userRepository.findByIdAndIsDeletedFalse("1") >> Optional.of(currentUser)
 
