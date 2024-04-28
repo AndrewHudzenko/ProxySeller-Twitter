@@ -32,7 +32,6 @@ class UserServiceImpl implements UserService {
 
     @Override
     UserDto registerUser(UserRegistrationRequestDto userRegistrationRequestDto) {
-        // TODO: Fix Groovy bug related to mapper
         if (userRepository.findByEmailAndIsDeletedFalse(userRegistrationRequestDto.getEmail()).isPresent()) {
             log.warn("UserServiceImpl: User with such email already registered!")
             throw new RegistrationException("User with such email already registered!");
