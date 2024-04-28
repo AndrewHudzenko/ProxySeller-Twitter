@@ -1,10 +1,10 @@
 package com.proxyseller.twitter.service.comment.impl
 
-import com.mongodb.MongoException
-import com.mongodb.MongoQueryException
+
 import com.proxyseller.twitter.dto.comment.CommentCreateRequestDto
 import com.proxyseller.twitter.dto.comment.CommentDto
 import com.proxyseller.twitter.dto.comment.CommentUpdateRequestDto
+import com.proxyseller.twitter.exception.EntityNotFoundException
 import com.proxyseller.twitter.mapper.comment.CommentMapper
 import com.proxyseller.twitter.mapper.post.PostMapper
 import com.proxyseller.twitter.model.comment.Comment
@@ -15,7 +15,6 @@ import com.proxyseller.twitter.service.comment.CommentService
 import com.proxyseller.twitter.service.post.PostService
 import groovy.util.logging.Slf4j
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 import java.util.stream.Collectors
 
@@ -42,7 +41,7 @@ class CommentServiceImpl implements CommentService {
     // TODO: FIX -> Transactional doesn't work here
     CommentDto createComment(CommentCreateRequestDto commentCreateRequestDto) {
         Post post = postRepository.findById(commentCreateRequestDto.getPostId())
-                .orElseThrow(() -> new IllegalArgumentException("Post not found"))
+                .orElseThrow(() -> new EntityNotFoundException("Post not found"))
 
         Comment comment = commentMapper.toModel(commentCreateRequestDto)
 
@@ -71,14 +70,14 @@ class CommentServiceImpl implements CommentService {
     @Override
     CommentDto getCommentById(String id) {
         return commentMapper.toDto(commentRepository.findByIdAndIsDeletedFalse(id)
-        .orElseThrow(() -> new IllegalArgumentException("Comment not found")))
+        .orElseThrow(() -> new EntityNotFoundException("Comment not found")))
     }
 
 
     @Override
     void deleteComment(String id) {
         Comment comment = commentRepository.findByIdAndIsDeletedFalse(id)
-                .orElseThrow(() -> new IllegalArgumentException("Comment not found"))
+                .orElseThrow(() -> new EntityNotFoundException("Comment not found"))
         log.info("Comment service: deleting comment, by id: $id")
         comment.setIsDeleted(true)
         commentRepository.save(comment)
@@ -88,16 +87,14 @@ class CommentServiceImpl implements CommentService {
 //    @Transactional
     CommentDto updateComment(String id, CommentUpdateRequestDto commentUpdateRequestDto) {
         Comment comment = commentRepository.findByIdAndIsDeletedFalse(id)
-                .orElseThrow(() -> new IllegalArgumentException("Comment not found"))
+                .orElseThrow(() -> new EntityNotFoundException("Comment not found"))
 
         log.info("Comment service: updating comment, by id: $id, request: $commentUpdateRequestDto")
         comment.setContent(commentUpdateRequestDto.getContent())
         commentMapper.toDto(commentRepository.save(comment))
 
-        throwException()
-
         Post post = postRepository.findById(comment.getPostId())
-                .orElseThrow(() -> new IllegalArgumentException("Post not found"))
+                .orElseThrow(() -> new EntityNotFoundException("Post not found"))
 
         log.info("Comment service: updating post, by id: ${post.getId()}, request: $commentUpdateRequestDto")
         post.getComments().stream()
@@ -107,10 +104,4 @@ class CommentServiceImpl implements CommentService {
         postService.updatePost(postMapper.toDto(post))
         return commentMapper.toDto(comment)
     }
-
-    void throwException() {
-        throw new RuntimeException("Exception thrown from CommentServiceImpl")
-    }
-
-
 }
