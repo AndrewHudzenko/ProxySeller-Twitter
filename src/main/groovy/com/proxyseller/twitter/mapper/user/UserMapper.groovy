@@ -12,8 +12,6 @@ interface UserMapper {
 
     UserDto toDto(User user);
 
-    User toModel(UserRegistrationRequestDto userRegistrationRequestDto);
-
     @Mapping(target = "password", expression = "java(com.proxyseller.twitter.security.SecurityUtil.encodePassword(userUpdateRequestDto.getPassword()))")
     User toModel(UserUpdateRequestDto userUpdateRequestDto);
 
