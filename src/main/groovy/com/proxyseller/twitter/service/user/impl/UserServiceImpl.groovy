@@ -132,11 +132,6 @@ class UserServiceImpl implements UserService {
         User followingUser = userRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found!"))
 
-        if (userRepository.findByIdAndIsDeletedFalse(id).isEmpty()) {
-            log.warn("UserServiceImpl: User with id: ${id} not found!")
-            throw new EntityNotFoundException("User not found!")
-        }
-
         if (currentUserId.equals(id)) {
             log.warn("UserServiceImpl: User can't follow himself!")
             throw new IllegalArgumentException("User can't follow himself!")
@@ -159,11 +154,6 @@ class UserServiceImpl implements UserService {
 
         User followingUser = userRepository.findByIdAndIsDeletedFalse(string)
                 .orElseThrow(() -> new EntityNotFoundException("User not found!"))
-
-        if (userRepository.findByIdAndIsDeletedFalse(string).isEmpty()) {
-            log.warn("UserServiceImpl: User with id: ${string} not found!")
-            throw new EntityNotFoundException("User not found!")
-        }
 
         if (currentUserId.equals(string)) {
             log.warn("UserServiceImpl: User can't unfollow yourself!")
