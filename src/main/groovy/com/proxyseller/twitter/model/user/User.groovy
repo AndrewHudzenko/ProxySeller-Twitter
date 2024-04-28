@@ -11,19 +11,19 @@ import org.springframework.security.core.userdetails.UserDetails
 @Document(collection = "users")
 class User implements UserDetails, Serializable {
     @Id
-    private String id;
-    private String firstName;
-    private String lastName;
+    private String id
+    private String firstName
+    private String lastName
     @Indexed(unique = true)
-    private String username;
+    private String username
     @Indexed(unique = true)
-    private String email;
-    private String password;
-    private Integer age;
-    private Set<String> following = new HashSet<>();
+    private String email
+    private String password
+    private Integer age
+    private Set<String> following = new HashSet<>()
     private Set<String> followers = new HashSet<>()
     private Role role = Role.ROLE_USER
-    private boolean isDeleted = false;
+    private boolean isDeleted = false
 
     @Override
     Collection<? extends GrantedAuthority> getAuthorities() {
@@ -177,9 +177,8 @@ class User implements UserDetails, Serializable {
         followers.remove(id)
     }
 
-
     @Override
-    public String toString() {
+    String toString() {
         return "User{" +
                 "id='" + id + '\'' +
                 ", firstName='" + firstName + '\'' +
@@ -192,6 +191,6 @@ class User implements UserDetails, Serializable {
                 ", followers=" + followers +
                 ", role=" + role +
                 ", isDeleted=" + isDeleted +
-                '}';
+                '}'
     }
 }
