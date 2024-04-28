@@ -1,4 +1,4 @@
-package com.proxyseller.twitter
+package com.proxyseller.twitter.service.user
 
 import com.proxyseller.twitter.dto.user.UserDto
 import com.proxyseller.twitter.dto.user.UserRegistrationRequestDto
