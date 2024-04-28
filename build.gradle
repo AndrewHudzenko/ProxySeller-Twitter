@@ -30,11 +30,11 @@ dependencies {
     implementation 'org.apache.groovy:groovy'
     implementation 'org.springframework.boot:spring-boot-starter-validation:3.2.0'
     implementation 'org.springframework.boot:spring-boot-starter-security:3.2.0'
+
+    // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.spockframework:spock-core:2.4-M1-groovy-4.0'
-    // https://mvnrepository.com/artifact/org.instancio/instancio-junit
     testImplementation 'org.instancio:instancio-junit:4.0.0'
-
 
     // Lombok
     implementation 'org.projectlombok:lombok:1.18.28'
