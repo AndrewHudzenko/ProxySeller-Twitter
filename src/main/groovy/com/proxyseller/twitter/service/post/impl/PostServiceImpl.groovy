@@ -3,6 +3,7 @@ package com.proxyseller.twitter.service.post.impl
 import com.proxyseller.twitter.dto.post.PostCreateRequestDto
 import com.proxyseller.twitter.dto.post.PostDto
 import com.proxyseller.twitter.dto.post.PostUpdateRequestDto
+import com.proxyseller.twitter.exception.EntityNotFoundException
 import com.proxyseller.twitter.mapper.post.PostMapper
 import com.proxyseller.twitter.model.post.Post
 import com.proxyseller.twitter.model.user.User
@@ -32,17 +33,7 @@ class PostServiceImpl implements PostService {
     @Override
     PostDto createPost(PostCreateRequestDto createPostRequestDto) {
         log.info("PostServiceImpl: Creating post: ${createPostRequestDto}")
-
-        Post post = postMapper.toModel(createPostRequestDto);
-//
-//        String currentUserId = SecurityUtil.getCurrentUserId()
-//        User currentUser = userRepository.findByIdAndIsDeletedFalse(currentUserId)
-//                .orElseThrow(() -> new RuntimeException("User not found!"))
-
-        // TODO: userId and postedAd fields to mapper
-//        post.setUserId(currentUser.getId())
-//        post.setPostedAt(Instant.now())
-
+        Post post = postMapper.toModel(createPostRequestDto)
         return postMapper.toDto(postRepository.insert(post))
     }
 
@@ -50,7 +41,7 @@ class PostServiceImpl implements PostService {
     PostDto getPostById(String id) {
         log.info("PostServiceImpl: Getting post by id: ${id}")
         return postMapper.toDto(postRepository.findByIdAndIsDeletedFalse(id)
-                .orElseThrow(() -> new RuntimeException("Post not found!")))
+                .orElseThrow(() -> new EntityNotFoundException("Post not found!")))
     }
 
     @Override
@@ -79,7 +70,7 @@ class PostServiceImpl implements PostService {
     @Override
     PostDto updatePost(String id, PostUpdateRequestDto updatePostRequestDto) {
         Post post = postRepository.findByIdAndIsDeletedFalse(id)
-                .orElseThrow(() -> new RuntimeException("Post not found!"))
+                .orElseThrow(() -> new EntityNotFoundException("Post not found!"))
         post.setLocation(updatePostRequestDto.getLocation())
         post.setImageUrl(updatePostRequestDto.getImageUrl())
         post.setContent(updatePostRequestDto.getContent())
@@ -91,7 +82,7 @@ class PostServiceImpl implements PostService {
     @Override
     void deletePostById(String id) {
         Post post = postRepository.findByIdAndIsDeletedFalse(id)
-                .orElseThrow(() -> new RuntimeException("Post not found!"))
+                .orElseThrow(() -> new EntityNotFoundException("Post not found!"))
         post.setIsDeleted(true)
 
         log.info("PostServiceImpl: Deleting post by id: ${id}")
@@ -109,9 +100,9 @@ class PostServiceImpl implements PostService {
 
     @Override
     List<PostDto> getAllPostsByFollowingUsers() {
-        String currentUserId = securityUtil.getCurrentUserId()
+        String currentUserId = SecurityUtil.getCurrentUserId()
         User currentUser = userRepository.findByIdAndIsDeletedFalse(currentUserId)
-                .orElseThrow(() -> new RuntimeException("User not found!"))
+                .orElseThrow(() -> new EntityNotFoundException("User not found!"))
 
         log.info("PostServiceImpl: Getting all posts by following users")
         return postRepository.findAllByUserIdInAndIsDeletedFalse(currentUser.getFollowing()).stream()
@@ -123,6 +114,6 @@ class PostServiceImpl implements PostService {
     Post getPostModelById(String id) {
         log.info("PostServiceImpl: Getting post model by id: ${id}")
         return postRepository.findByIdAndIsDeletedFalse(id)
-                .orElseThrow(() -> new RuntimeException("Post not found!"))
+                .orElseThrow(() -> new EntityNotFoundException("Post not found!"))
     }
 }
