@@ -122,6 +122,7 @@ class UserServiceImpl implements UserService {
     }
 
     @Override
+    // TODO: Need to set Mongo replica set to enable transactions
 //    @Transactional
     void followUser(String id) {
         String currentUserId = SecurityUtil.getCurrentUserId()
@@ -145,6 +146,7 @@ class UserServiceImpl implements UserService {
     }
 
     @Override
+    // TODO: Need to set Mongo replica set to enable transactions
 //    @Transactional
     void unfollowUser(String string) {
         String currentUserId = SecurityUtil.getCurrentUserId()

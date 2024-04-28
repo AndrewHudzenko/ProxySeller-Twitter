@@ -33,6 +33,7 @@ class LikeServiceImpl implements LikeService {
     }
 
     @Override
+    // TODO: Need to set Mongo replica set to enable transactions
 //    @Transactional
     LikeDto likePost(LikePostRequestDto likeCreateRequestDto) {
         log.info("Like service: like post with id: ${likeCreateRequestDto.getPostId()}")
@@ -48,6 +49,7 @@ class LikeServiceImpl implements LikeService {
     }
 
     @Override
+    // TODO: Need to set Mongo replica set to enable transactions
 //    @Transactional
     void unlikePost(UnlikePostRequestDto unlikePostRequestDto) {
         log.info("Like service: unlike post with id: ${unlikePostRequestDto.getPostId()}")
