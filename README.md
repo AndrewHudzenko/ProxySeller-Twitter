@@ -35,3 +35,4 @@ spring.data.mongodb.auto-index-creation=true
 7. Open [Swagger](http://localhost:8080/swagger-ui/index.html) to see the API documentation
 8. Enjoy it!
 
+
